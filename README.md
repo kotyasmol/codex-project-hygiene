@@ -1,68 +1,118 @@
-# Codex Cleanup & Hygiene
+# Codex Project Hygiene
 
-**A safety-first Codex skill for diagnosing workspace sprawl, preventing future clutter, reclaiming reproducible project data, and reviewing generated images without guessing what the user meant to keep.**
+**A preventive Codex skill that installs persistent project instructions before
+development starts, so future tasks create fewer directories, keep temporary
+iterations outside the repository, and give durable artifacts meaningful names.**
 
-Codex Cleanup & Hygiene has two deliberately separate jobs. Its hygiene audit
-explains excessive directories and unclear generated names without reading file
-contents or offering a delete button. Its cleanup workflows inventory dependency
-trees, build outputs, developer caches, and generated media, then require an
-exact approved selection and recovery mode before changing anything.
+Most cleanup tools arrive after a workspace has already become a landfill. This
+skill starts earlier: it adds one reviewed block to the project's root
+`AGENTS.md`. Codex then discovers the rules in later tasks without requiring the
+skill to be invoked for every change.
+
+Cleanup helpers for existing projects remain available as an explicit secondary
+mode. They are not activated by project bootstrap.
 
 This is an independent community project and is not an official OpenAI product.
 
-> [!IMPORTANT]
-> This project is a **beta**, not a promise of zero risk. Its design is default-deny, fail-closed, and recoverability-first. Keep backups of irreplaceable work and read [the safety contract](docs/SAFETY.md) before enabling permanent deletion.
+## What changes after bootstrap
 
-## Why this exists
+Future Codex tasks are instructed to:
 
-Developer tools can accumulate tens of gigabytes of rebuildable dependencies, caches, worktrees, and generated media. Ordinary disk cleaners are a poor fit because a directory called `build`, an old file, or a visually similar image is not necessarily disposable.
+- inspect and reuse the established project layout before creating paths;
+- create a directory only for a real toolchain requirement or a coherent group
+  of durable deliverables;
+- keep downloads, experiments, renders, captures, and rejected candidates in
+  one task-scoped temporary directory outside the repository;
+- generate one media candidate by default and iterate on it unless alternatives
+  were requested;
+- copy only selected deliverables into the project;
+- use semantic names such as `onboarding-dashboard-mobile.png` instead of
+  `final-2.png`, `result-new.png`, timestamps, hashes, or raw prompt fragments;
+- report the durable paths created and remove only scratch from the current task.
 
-This skill uses a narrower contract:
+The policy respects user-requested paths, repository conventions, and standard
+tool-managed directories. It never authorizes reorganizing or deleting existing
+content.
 
-- scanning is read-only with respect to cleanup targets;
-- broad roots such as `/`, an entire home directory, an ancestor containing that home, and all of `CODEX_HOME` are rejected;
-- tracked files, repository boundaries, symlinks, mounts, deliverable trees, and protected Codex state are never deletion targets;
-- every mutation is bound to a fresh plan, exact item IDs, and either Trash or permanent mode;
-- filesystem identity and policy evidence are checked again immediately before mutation;
-- generated-image similarity is only a review aid and never selects a file;
-- workspace-hygiene findings are metadata-only observations, never deletion candidates;
-- no network requests or telemetry are used at runtime.
+## Install the skill
 
-The word `safe` in a plan means **marker-backed and reproducible**, not “delete without looking.” It still requires exact approval.
-
-## Installation
-
-The repository itself is the skill directory. For a personal standalone install,
-clone or copy it to `$HOME/.agents/skills/codex-disk-cleanup`, then restart
-Codex. If it is hosted on GitHub, you can instead ask Codex to use
-`$skill-installer` with the repository URL. Review the requested source and
-revision before installing a filesystem mutator.
-
-Requirements:
-
-- Python 3.9-compatible syntax and runtime; maintained CI targets are listed in
-  [the workflow](.github/workflows/ci.yml), and an OS/Python pair is supported
-  only after that matrix passes;
-- no third-party Python packages;
-- Git for repository-aware classification;
-- `lsof` and `pgrep` for apply-time process checks on supported Unix systems;
-- optionally, `ffmpeg` for faster generated-image review hashing. The standard-library PNG implementation remains available.
-
-Then ask Codex:
+The repository itself is the skill directory. Clone or copy it to:
 
 ```text
-Use $codex-disk-cleanup to audit this project. Show me the sealed plan and estimated savings, but do not change anything until I approve exact IDs in Trash mode.
+$HOME/.agents/skills/codex-project-hygiene
 ```
 
-Or, for directory and naming hygiene only:
+Then restart Codex. You can also ask Codex to use `$skill-installer` with:
 
 ```text
-Use $codex-disk-cleanup to audit this project's directory sprawl and generated artifact names. Do not create a report file, rename anything, or prepare a deletion plan.
+https://github.com/kotyasmol/codex-disk-cleanup
 ```
 
-## Workspace hygiene
+The repository currently retains its original cleanup-era URL; the installed
+skill name is `codex-project-hygiene`.
 
-Run the standalone read-only audit against one bounded project:
+Review the source and revision before installing any skill that can modify
+project instructions or files.
+
+Runtime requirements are Python 3.9 or newer and Git. There are no third-party
+Python dependencies and no runtime network calls or telemetry.
+
+## Bootstrap a new project
+
+At the beginning of development, ask:
+
+```text
+Use $codex-project-hygiene to bootstrap this project. Preview the exact
+project-level AGENTS.md change, preserve existing instructions, and install it
+after I approve the target, diff, and fingerprint. Do not create anything else.
+```
+
+The skill first runs a non-mutating preview:
+
+```bash
+python3 scripts/install_policy.py preview \
+  --root /path/to/project \
+  --format terminal
+```
+
+Preview shows the exact `AGENTS.md` target, action, unified diff, and approval
+token. After approval:
+
+```bash
+python3 scripts/install_policy.py apply \
+  --root /path/to/project \
+  --confirm APPROVAL_TOKEN
+```
+
+The installer changes only the root `AGENTS.md`. It preserves unrelated bytes,
+owns only one explicitly marked block, performs an atomic replacement, and
+rejects symlinks, broad roots, malformed markers, invalid UTF-8, oversized
+instruction files, or a stale fingerprint. It creates no config directory,
+backup, policy database, report, or daemon.
+
+Installing the skill alone is not enough: skills are selected per task. The
+bootstrap step is what makes the guidance persistent for that project.
+
+## The installed policy
+
+The maintained source is
+[`assets/AGENTS.project-hygiene.md`](assets/AGENTS.project-hygiene.md). The
+installer surrounds it with:
+
+```html
+<!-- codex-project-hygiene:start -->
+...
+<!-- codex-project-hygiene:end -->
+```
+
+Running bootstrap again updates that block without duplicating it. Conflicting,
+missing, or duplicate markers fail closed for manual review. See
+[instruction precedence and removal](references/workspace-hygiene.md).
+
+## Audit an existing messy project
+
+The read-only audit examines names and directory metadata without reading file
+contents or writing a report file:
 
 ```bash
 python3 scripts/hygiene_audit.py \
@@ -70,141 +120,71 @@ python3 scripts/hygiene_audit.py \
   --format terminal
 ```
 
-The audit is descriptor-anchored and metadata-only: it does not read README,
-AGENTS, source, manifests, secrets, or media bytes. It groups tool-managed trees
-such as nested `node_modules` instead of listing every internal directory. It
-can highlight project-local package stores, persistent scratch, possible
-iteration families, root-level artifact families, and opaque names, but always
-reports origin as `unknown` and confirmed reclaimable bytes as zero.
+It can highlight persistent scratch trees, project-local package stores,
+iteration families, opaque names, and excessive root artifacts. Every finding
+has unknown origin and zero confirmed reclaimable bytes. A filename does not
+prove that Codex created it or that it is safe to remove.
 
-The command writes only to stdout and has no mutation mode. Its JSON report is
-not a cleanup plan and is rejected by cleanup approval/apply commands.
+## Optional cleanup for existing data
 
-To influence future Codex tasks, review the optional
-[`AGENTS.workspace-hygiene.md`](assets/AGENTS.workspace-hygiene.md) fragment and
-the [merge instructions](references/workspace-hygiene.md). The fragment favors
-existing project structure, external task-scoped scratch, the smallest useful
-generated-media batch, and semantic names such as
-`onboarding-dashboard-mobile.png`. It must be explicitly merged into a global
-or project `AGENTS.md`; installation of this skill alone does not change ordinary
-Codex file-creation behavior or the app's own media retention.
+Only an explicit cleanup request activates these tools:
 
-## Project cleanup
+- `scripts/cleanup.py` inventories bounded dependency trees, build outputs, and
+  developer caches;
+- `scripts/media_cleanup.py` creates a bounded local review gallery for exact
+  generated-image selection.
 
-Create a new plan file for one bounded root:
+Cleanup requires a sealed plan, visible exact IDs, an operation-bound token,
+and either Trash or permanent mode. Trash is recommended; permanent deletion
+requires a separate no-recovery acknowledgement. Tracked files, repositories,
+symlinks, mount boundaries, deliverable trees, and protected Codex state cannot
+be selected.
 
-```bash
-python3 scripts/cleanup.py scan \
-  --root /path/to/project \
-  --plan /private/path/codex-cleanup-plan.json
-```
+Visual similarity and exact duplication only create review groups. They never
+select an image. Codex currently exposes no dependable machine-readable
+accepted/rejected flag, so the skill cannot safely delete rejected images in the
+background or prevent the application from retaining history.
 
-Review every candidate. To prepare approval for all items classified `safe`, with recoverability:
+## Safety boundary
 
-```bash
-python3 scripts/cleanup.py token \
-  --plan /private/path/codex-cleanup-plan.json \
-  --safe \
-  --trash
-```
+- Project bootstrap never implies cleanup permission.
+- The policy installer writes only the exact project-level `AGENTS.md`.
+- Existing files are never renamed, moved, or deleted to enforce neatness.
+- Cleanup scans reject `/`, a home directory, broad ancestors, and all of
+  `CODEX_HOME`.
+- Cleanup never edits Codex sessions, JSONL history, SQLite/WAL state, task
+  locks, configuration, installed skills, or plugins.
+- Cleanup uses no `rm -rf`, `git clean`, wildcard selection, force flag,
+  privilege escalation, or copy-and-delete Trash fallback.
 
-Only after the user approves the printed plan, selection, size, mode, and token:
+Read the [safety contract](docs/SAFETY.md),
+[threat model](docs/THREAT-MODEL.md), and
+[recovery guide](docs/RECOVERY.md) before enabling cleanup. Cleanup support is a
+safety-first beta, not a promise of zero risk.
 
-```bash
-python3 scripts/cleanup.py apply \
-  --plan /private/path/codex-cleanup-plan.json \
-  --safe \
-  --trash \
-  --confirm APPROVAL_TOKEN
-```
+## Platform status
 
-`review` items require explicit comma-separated IDs. `never-delete` items cannot be selected. A plan expires after 24 hours, rejects future-dated validity windows, and any relevant filesystem or policy change causes the item to be skipped. Trash approvals are also bound to the exact platform, backend, and canonical Trash root.
+The policy installer uses standard-library Python and is tested with synthetic
+fixtures. The metadata audit and cleanup tools remain deliberately narrower:
 
-## Generated-image review
+| Platform | Policy bootstrap | Hygiene audit | Cleanup apply |
+|---|---:|---:|---:|
+| macOS | Yes | Yes | Experimental beta |
+| Linux | Yes | Yes | Experimental beta |
+| Windows | Implemented, not yet CI-certified | Hard-disabled in this beta | Hard-disabled |
 
-Codex currently does not expose a dependable machine-readable “accepted” or “rejected” flag for generated images. This skill therefore begins with every image in the `unknown` state and protects it until a person explicitly identifies the exact file.
+No platform support claim is final until the public CI matrix is green.
 
-Create a local inventory and gallery:
-
-```bash
-python3 scripts/media_cleanup.py scan \
-  --plan /private/path/codex-media-plan.json \
-  --gallery /private/path/codex-media-gallery.html
-```
-
-The gallery embeds bounded, lossy thumbnails rather than opening original image
-bytes in the browser. Nothing is checked by default, and the displayed exact
-path should be inspected with a trusted resource-limited viewer whenever fine
-detail matters. Exact duplicates and same-thread visual candidates are grouped
-only for review.
-
-One gallery is capped at 200 images and 32 MiB of encoded thumbnails. For a
-larger store, create bounded per-thread galleries by repeating `--thread`:
+## Development
 
 ```bash
-python3 scripts/media_cleanup.py scan \
-  --thread THREAD_ID \
-  --plan /private/path/thread-media-plan.json \
-  --gallery /private/path/thread-media-gallery.html
+python3 -m unittest discover -s tests -v
+python3 -m py_compile scripts/*.py tests/*.py
 ```
 
-After the user explicitly rejects exact IDs:
-
-```bash
-python3 scripts/media_cleanup.py token \
-  --plan /private/path/codex-media-plan.json \
-  --ids ID_1,ID_2 \
-  --trash
-
-python3 scripts/media_cleanup.py apply \
-  --plan /private/path/codex-media-plan.json \
-  --ids ID_1,ID_2 \
-  --trash \
-  --confirm APPROVAL_TOKEN
-```
-
-The skill never edits Codex session JSONL or SQLite state. See [Generated media](docs/GENERATED-MEDIA.md) for the evidence, limitations, and the proposed upstream fix.
-
-## Support matrix
-
-This is deliberately narrower than “runs everywhere.” A filesystem mutator should earn platform support with tests.
-
-| Platform | Hygiene audit | Cleanup audit and plan | Generated-media review | Trash implementation | Status |
-|---|---:|---:|---:|---:|---|
-| macOS | Yes | Yes | Yes | Implemented, not recovery-certified | Experimental beta |
-| Linux | Yes | Yes | Yes | FreeDesktop implementation, not recovery-certified | Experimental beta |
-| Windows | Hard-disabled | Not claimed / untested | Not claimed / untested | No; both apply commands are hard-disabled | No support claim |
-
-The checked-in CI workflow runs the synthetic scan, policy, tamper,
-permanent-mode, same-device Trash, manual-restore, mount-ID, decoder-budget, and
-media-consent safety suite on macOS and Ubuntu. A release must not claim that
-matrix passed until the public workflow is green. It does not certify a desktop
-environment's **Put Back** UI. Network filesystems, unusual containers, and
-privilege escalation are outside the claim.
-
-## What it will not do
-
-- infer rejection from age, filename, prompt similarity, visual similarity, or “all but newest”;
-- infer that a path was created by Codex or is obsolete from its name;
-- automatically rename or reorganize pre-existing project content;
-- clean `/`, a whole home directory, or all Codex state;
-- follow symlinks, cross mounts, delete repositories, or use copy-then-delete as a Trash fallback;
-- edit `sessions`, archived session history, rollout JSONL, SQLite/WAL files, configuration, skills, or plugins;
-- use `rm -rf`, `git clean`, shell globs, hidden force flags, network calls, or telemetry;
-- promise that Trash immediately reclaims space—it does not until Trash is emptied;
-- prevent Codex from retaining future images at the application level. That requires an upstream lifecycle change.
-
-## Documentation
-
-- [Safety contract](docs/SAFETY.md)
-- [Threat model](docs/THREAT-MODEL.md)
-- [Generated-media policy and audit evidence](docs/GENERATED-MEDIA.md)
-- [Workspace-hygiene policy](references/workspace-hygiene.md)
-- [Recovery guide](docs/RECOVERY.md)
-- [Upstream storage proposal](docs/UPSTREAM-PROPOSAL.md)
-- [Maintainer release checklist](docs/RELEASE-CHECKLIST.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
+Contributions should use only synthetic fixtures and must preserve the
+default-deny boundaries. See [CONTRIBUTING.md](CONTRIBUTING.md) and
+[SECURITY.md](SECURITY.md).
 
 ## License
 

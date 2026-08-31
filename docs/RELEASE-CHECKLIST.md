@@ -9,8 +9,8 @@ Use this checklist before publishing a beta or stable release.
 - Require pull-request review and passing CI for the default branch.
 - Enable Dependabot or Renovate for pinned GitHub Actions commit updates; keep
   the human-readable release tag in an inline comment.
-- Suggested repository topics: `codex`, `openai-codex`, `disk-cleanup`,
-  `developer-tools`, `python`, `safety`, and `ai-tools`.
+- Suggested repository topics: `codex`, `openai-codex`, `agents-md`,
+  `project-hygiene`, `developer-tools`, `python`, `safety`, and `ai-tools`.
 - State clearly that this is an independent community project, not an official
   OpenAI product.
 
@@ -19,15 +19,18 @@ Use this checklist before publishing a beta or stable release.
 - Run the full test matrix on macOS and Linux using every advertised Python
   version.
 - Run `quick_validate.py` from the official Codex skill-creator tooling.
+- Verify policy preview is non-mutating, installation preserves unrelated
+  instructions, stale fingerprints and symlinks fail closed, and a second
+  installation creates no duplicate managed block.
 - Verify scan, recomputed-plan rejection, selection/mode binding, Trash,
   manual restore, and permanent acknowledgement on synthetic fixtures only.
 - Verify that the hygiene audit is stdout-only, metadata-only, deterministic,
   bounded, symlink/mount safe, nonblocking on special files, and rejected as a
   cleanup plan. Run an instruction-like hostile-filename fixture and confirm no
   project entry changes.
-- Review the optional `AGENTS.md` fragment for merge-only language, semantic
-  naming, external scratch, and an explicit prohibition on renaming or deleting
-  pre-existing paths.
+- Review the `AGENTS.md` fragment for semantic naming, external task scratch,
+  minimal media batches, useful directory boundaries, and an explicit
+  prohibition on renaming or deleting pre-existing paths.
 - Review all platform claims against the exact tests that ran. Do not promote a
   platform from audit-only based on code inspection alone.
 - Confirm that the release archive contains no plan, gallery, journal, real

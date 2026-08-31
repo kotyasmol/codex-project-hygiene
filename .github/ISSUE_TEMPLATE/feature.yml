@@ -13,6 +13,7 @@ body:
         - Platform adapter
         - Recovery improvement
         - Generated-media review
+        - Project bootstrap policy
         - Workspace hygiene
         - Documentation
         - Test or fuzzing

@@ -10,7 +10,7 @@ The runtime has no third-party Python dependencies. With Python 3.9 or newer:
 
 ```bash
 python3 -m unittest discover -s tests -v
-python3 -m py_compile scripts/cleanup.py scripts/media_cleanup.py scripts/hygiene_audit.py tests/test_cleanup.py tests/test_media_cleanup.py tests/test_hygiene_audit.py tests/test_package.py
+python3 -m py_compile scripts/*.py tests/*.py
 ```
 
 Run tests only against their generated temporary fixtures. Do not point development builds at real project trees or real Codex state.
@@ -56,6 +56,12 @@ Add bounded synthetic fixtures for hostile path controls, symlink swaps, mount
 boundaries, special files, huge fanout, depth, time, and deterministic output.
 Group tool-managed subtrees so the audit does not turn one package store into
 hundreds of findings.
+
+The persistent policy installer owns only its marked block in the root
+`AGENTS.md`. Changes must preserve unrelated bytes and include synthetic tests
+for preview non-mutation, stale content, symlinks, malformed markers, and
+idempotence. Do not add global installation, background enforcement, a policy
+database, a backup directory, or silent reorganization of existing content.
 
 ## Platform support
 

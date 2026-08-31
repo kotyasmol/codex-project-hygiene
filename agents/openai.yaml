@@ -1,4 +1,4 @@
 interface:
-  display_name: "Codex Cleanup & Hygiene"
-  short_description: "Safe cleanup and uncluttered workspaces"
-  default_prompt: "Use $codex-disk-cleanup to audit workspace clutter, unclear generated artifacts, reclaimable project data, and generated images. Keep hygiene findings read-only and make no cleanup changes until I approve exact IDs and a mode."
+  display_name: "Codex Project Hygiene"
+  short_description: "Prevent clutter before development starts"
+  default_prompt: "Use $codex-project-hygiene to preview and install persistent project-level AGENTS.md rules before development starts; preserve existing instructions and create no other project files."

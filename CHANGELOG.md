@@ -7,6 +7,37 @@ All notable changes are documented here. This project follows semantic versionin
 - Desktop Trash UI certification and broader adversarial coverage remain in progress.
 - A restore command and durable generated-media decision ledger are under consideration.
 
+## [0.4.0-beta] - 2026-08-31
+
+### Changed
+
+- Repositioned the skill around prevention before development rather than
+  post-hoc deletion. The skill is now `codex-project-hygiene`, with project
+  bootstrap as its primary workflow and cleanup as an explicit secondary mode.
+- Reworked the persistent policy to minimize durable directories, keep
+  task-scoped scratch and rejected iterations outside the repository, default
+  to one generated-media candidate, and require semantic artifact names.
+- Updated the UI metadata, installation instructions, and default prompt around
+  project-level `AGENTS.md` bootstrap.
+
+### Added
+
+- `scripts/install_policy.py` previews and atomically installs one managed
+  project-hygiene block in the root `AGENTS.md`.
+- The preview fingerprint binds the canonical root, previous instruction file,
+  and proposed content without creating a plan or state file.
+- Synthetic coverage for non-mutation, existing-instruction preservation,
+  stale previews, symlink destinations, malformed markers, idempotence, and
+  broad-scope rejection.
+
+### Safety changes
+
+- Bootstrap never implies cleanup authorization and never writes to global
+  Codex configuration, `AGENTS.override.md`, nested instruction files, or any
+  project path other than the exact root `AGENTS.md`.
+- Installation refuses symlinks, special files, invalid UTF-8, oversized files,
+  duplicate or incomplete markers, and changed root/destination state.
+
 ## [0.3.0-beta] - 2026-08-31
 
 ### Added

@@ -1,43 +1,58 @@
-# Workspace-hygiene instructions
+# Persistent project-hygiene instructions
 
-Use the mergeable fragment in
-`assets/AGENTS.workspace-hygiene.md` when the user wants Codex to prevent new
-workspace clutter, not merely audit existing files. The fragment sets defaults
-for paths created by future tasks; it does not authorize cleanup, renaming, or
-reorganization of existing content.
+Use the bundled installer when the user wants Codex to prevent new workspace
+clutter before development starts. The resulting managed block affects future
+file creation; it does not authorize cleanup, renaming, or reorganization of
+pre-existing content.
 
-## Choose the instruction scope
+## Why the policy goes in AGENTS.md
 
-- **Global:** add the fragment to `AGENTS.md` in the active Codex home (normally
-  `~/.codex/AGENTS.md`) only when the user wants the preference in every
-  repository. Resolve the actual `CODEX_HOME` first. A global
-  `AGENTS.override.md`, when present, takes precedence over the ordinary global
-  file.
-- **Project:** add the fragment to the repository-root `AGENTS.md` when the
-  preference should apply only to that repository. More specific instructions
-  closer to a working directory can override broader project guidance.
+A skill is loaded only when a task selects or invokes it. Installation alone
+does not inject the skill into every later task. A root-level `AGENTS.md` is the
+durable project instruction surface that subsequent Codex tasks discover.
 
-Do not choose global scope merely because the request sounds general. Confirm
-the intended scope when it is not already explicit. Do not install this
-fragment during an audit-only request.
+This project intentionally installs only at project scope. It does not write to
+the Codex home directory, global configuration, `AGENTS.override.md`, or nested
+instruction files. Users who want a global preference should make that separate
+scope choice themselves after reviewing the project policy.
 
-## Merge without damage
+## Safe installation
 
-1. Inspect the destination and every applicable existing instruction file.
-2. If the destination exists, merge the fragment as one clearly headed section;
-   preserve its content, ordering constraints, and repository-specific rules.
-   Resolve contradictions in favor of explicit user choices and the more local
-   convention.
-3. If the destination does not exist, show the exact path and proposed scope
-   before creating it. Never overwrite an existing `AGENTS.md` or
-   `AGENTS.override.md`, and never replace a whole file with this template.
-4. Do not add duplicate copies when equivalent guidance is already active. Do
-   not modify an override file unless the user explicitly chose that file.
-5. After an approved change, reread the resulting file and report the exact path
-   and scope. Starting a new Codex run may be necessary for newly installed
-   instructions to be discovered.
+Run `scripts/install_policy.py preview --root <project>` first. Preview prints
+the exact target, a unified diff, and an approval token without changing the
+project. The token binds the canonical project root, previous `AGENTS.md`
+content, and proposed content.
 
-Official OpenAI documentation for discovery order, global guidance, project
-instructions, and overrides:
+`scripts/install_policy.py apply --root <project> --confirm <token>` then:
 
-https://learn.chatgpt.com/docs/agent-configuration/agents-md
+- re-resolves the same bounded project root;
+- refuses a symlinked root or `AGENTS.md`, special files, invalid UTF-8, files
+  larger than 256 KiB, and malformed or duplicate managed markers;
+- preserves every byte outside its marked block;
+- rejects content or root identity changes after preview;
+- writes the result through a same-directory temporary file and atomic replace;
+- removes its temporary file on failure.
+
+No backup or state file is created. Git or the user's ordinary backup system
+remains the recovery mechanism for project instructions.
+
+## Instruction precedence and conflicts
+
+Inspect all applicable instruction files before installation. Preserve explicit
+user choices, repository-specific tool requirements, and more local guidance.
+If the bundled block contradicts an existing rule, explain the exact conflict
+instead of silently installing it. Do not modify an override file unless the
+user explicitly asks for a separate manual change.
+
+If the managed block is already current, apply is a no-op. If its markers are
+missing, duplicated, or reordered, stop for manual review rather than guessing
+which content belongs to the skill.
+
+## Manual removal
+
+Removal is intentionally not automated in this beta. After an explicit request,
+remove the single block from
+`<!-- codex-project-hygiene:start -->` through
+`<!-- codex-project-hygiene:end -->` with a normal reviewed edit. Preserve all
+surrounding content and do not delete `AGENTS.md` when unrelated instructions
+remain.

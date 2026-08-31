@@ -19,6 +19,7 @@ body:
         - Permanent apply
         - Recovery
         - Generated-media gallery
+        - Project-policy preview or install
         - Workspace-hygiene audit
     validations:
       required: true
@@ -26,7 +27,7 @@ body:
     id: version
     attributes:
       label: Version or commit
-      placeholder: 0.3.0-beta or commit SHA
+      placeholder: 0.4.0-beta or commit SHA
     validations:
       required: true
   - type: input

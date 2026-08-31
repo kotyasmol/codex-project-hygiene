@@ -1,8 +1,23 @@
 # Safety contract
 
-Codex Disk Cleanup is designed to make an unsafe action difficult to express. It is not “100% safe,” and it cannot replace backups, filesystem snapshots, or human judgment about irreplaceable work.
+Codex Project Hygiene is designed to prevent workspace sprawl and make unsafe
+cleanup difficult to express. It is not “100% safe,” and it cannot replace
+backups, filesystem snapshots, or human judgment about irreplaceable work.
 
 The contract below is normative. A change that weakens it is a breaking safety change even if the command-line interface stays the same.
+
+## 0. Bootstrap is narrow and separate from cleanup
+
+Project bootstrap changes only the exact project-root `AGENTS.md` after showing
+a diff and operation fingerprint. It preserves content outside one managed
+block, refuses symlinks and malformed markers, revalidates root and destination
+state, and writes atomically. It creates no policy state, backup, report,
+background process, global instruction, override, or nested instruction file.
+
+Installing or updating the preventive policy never authorizes scanning or
+deleting existing data. Conversely, an audit request never authorizes installing
+persistent instructions. Existing project paths are not renamed, moved, or
+deleted to enforce the policy.
 
 ## 1. Scan does not mutate cleanup targets
 

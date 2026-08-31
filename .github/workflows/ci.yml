@@ -1,6 +1,6 @@
 name: CI
 
-on:
+"on":
   push:
   pull_request:
   workflow_dispatch:
@@ -9,16 +9,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
   safety-suite:
-    name: Python ${{ matrix.python }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: "Python ${{ matrix.python }} on ${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}"
     timeout-minutes: 15
     env:
-      PYTHONPYCACHEPREFIX: ${{ runner.temp }}/codex-cleanup-pycache
+      PYTHONPYCACHEPREFIX: "${{ runner.temp }}/codex-cleanup-pycache"
     strategy:
       fail-fast: false
       matrix:
@@ -45,9 +45,11 @@ jobs:
           scripts/cleanup.py
           scripts/media_cleanup.py
           scripts/hygiene_audit.py
+          scripts/install_policy.py
           tests/test_cleanup.py
           tests/test_media_cleanup.py
           tests/test_hygiene_audit.py
+          tests/test_install_policy.py
           tests/test_package.py
 
       - name: Run synthetic safety tests

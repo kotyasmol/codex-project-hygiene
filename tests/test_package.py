@@ -18,21 +18,23 @@ class PackageContractTests(unittest.TestCase):
             self.assertTrue(separator, line)
             fields[key.strip()] = value.strip()
         self.assertEqual(set(fields), {"name", "description"})
-        self.assertEqual(fields["name"], "codex-disk-cleanup")
+        self.assertEqual(fields["name"], "codex-project-hygiene")
         self.assertRegex(fields["name"], r"^[a-z0-9-]+$")
         self.assertGreater(len(fields["description"]), 20)
         self.assertLessEqual(len(fields["description"]), 1024)
 
     def test_ui_manifest_mentions_the_skill(self) -> None:
         text = (ROOT / "agents" / "openai.yaml").read_text(encoding="utf-8")
-        self.assertIn('display_name: "Codex Cleanup & Hygiene"', text)
-        self.assertIn("$codex-disk-cleanup", text)
+        self.assertIn('display_name: "Codex Project Hygiene"', text)
+        self.assertIn("$codex-project-hygiene", text)
 
     def test_workspace_hygiene_release_assets_exist(self) -> None:
         expected = (
+            ROOT / "scripts" / "install_policy.py",
             ROOT / "scripts" / "hygiene_audit.py",
+            ROOT / "tests" / "test_install_policy.py",
             ROOT / "tests" / "test_hygiene_audit.py",
-            ROOT / "assets" / "AGENTS.workspace-hygiene.md",
+            ROOT / "assets" / "AGENTS.project-hygiene.md",
             ROOT / "references" / "workspace-hygiene.md",
         )
         for path in expected:
