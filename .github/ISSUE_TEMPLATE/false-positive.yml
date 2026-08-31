@@ -1,0 +1,51 @@
+name: False-positive candidate
+description: Report a path that was classified more aggressively than it should be.
+title: "[False positive]: "
+labels:
+  - false-positive
+  - safety
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not apply the plan. Preserve the target and report a synthetic equivalent. If the candidate could escape its root or delete protected data, use the private process in SECURITY.md.
+  - type: input
+    id: category
+    attributes:
+      label: Reported category and classification
+      placeholder: node-modules / safe
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Ubuntu 24.04, ext4, Python 3.12
+    validations:
+      required: true
+  - type: textarea
+    id: synthetic_tree
+    attributes:
+      label: Synthetic directory tree
+      description: Replace real names and content. Explain which file is source, a deliverable, or otherwise not reproducible.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why this must be review-only or protected
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_guard
+    attributes:
+      label: Suggested negative fixture or guard
+      description: Optional. A fix should protect the false positive without broadly hiding genuine candidates.
+  - type: checkboxes
+    id: not_applied
+    attributes:
+      label: Safety check
+      options:
+        - label: I did not apply the reported candidate and shared no real plan, path, session, database, prompt, or generated image.
+          required: true

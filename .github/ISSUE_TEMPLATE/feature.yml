@@ -1,0 +1,50 @@
+name: Safety or rule proposal
+description: Propose a bounded cleanup rule, platform adapter, recovery feature, or review improvement.
+title: "[Proposal]: "
+labels:
+  - enhancement
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Proposal type
+      options:
+        - Cleanup rule
+        - Platform adapter
+        - Recovery improvement
+        - Generated-media review
+        - Workspace hygiene
+        - Documentation
+        - Test or fuzzing
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the concrete storage or safety problem without real user data.
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Reproducibility and safety evidence
+      description: For a cleanup rule, name the producer, markers, boundaries, likely false positives, apply-time checks, and recovery path.
+    validations:
+      required: true
+  - type: textarea
+    id: fixtures
+    attributes:
+      label: Proposed synthetic fixtures
+      description: Include both a positive match and a nearby item that must remain untouched.
+    validations:
+      required: true
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Invariants
+      options:
+        - label: The proposal does not require visual similarity, age, size, or basename alone to authorize deletion.
+          required: true
+        - label: The proposal does not require a force flag, copy-and-delete fallback, network telemetry, or editing Codex session/database state.
+          required: true

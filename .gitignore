@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environments and editors
+.venv/
+.idea/
+.vscode/
+.DS_Store
+
+# Private cleanup artifacts
+codex-cleanup-plan*.json
+codex-media-plan*.json
+codex-media-gallery*.html
+*.result-*.json
+*.journal-*.jsonl
+*.media-result-*.jsonl
+
+# Packaging
+dist/
+build/
+*.egg-info/

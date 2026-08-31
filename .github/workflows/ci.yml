@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  safety-suite:
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      PYTHONPYCACHEPREFIX: ${{ runner.temp }}/codex-cleanup-pycache
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.9", "3.11", "3.13", "3.14"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Verify fail-closed process probes
+        run: |
+          command -v lsof
+          command -v pgrep
+
+      - name: Compile Python sources
+        run: >-
+          python -m py_compile
+          scripts/cleanup.py
+          scripts/media_cleanup.py
+          scripts/hygiene_audit.py
+          tests/test_cleanup.py
+          tests/test_media_cleanup.py
+          tests/test_hygiene_audit.py
+          tests/test_package.py
+
+      - name: Run synthetic safety tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Check whitespace and conflict markers
+        run: |
+          if git grep -nI -E '[[:blank:]]+$' -- '*.py' '*.md' '*.yml' '*.yaml'; then exit 1; fi
+          if git grep -nI -E '^(<<<<<<<|=======|>>>>>>>)' -- '*.py' '*.md' '*.yml' '*.yaml'; then exit 1; fi
