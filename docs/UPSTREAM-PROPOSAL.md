@@ -94,4 +94,4 @@ An upstream implementation is ready when it can demonstrate:
 - cleanup is local-only unless the user separately opts into sync;
 - adversarial tests cover stale manifests, reference races, corrupted blobs, and interrupted migration.
 
-Until those conditions exist upstream, Codex Disk Cleanup will keep generated-media cleanup explicit, per-file, review-only, and separate from Codex history stores.
+Until those conditions exist upstream, Codex Project Hygiene will keep generated-media cleanup explicit, per-file, review-only, and separate from Codex history stores.

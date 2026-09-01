@@ -34,7 +34,9 @@ Use this checklist before publishing a beta or stable release.
 - Review all platform claims against the exact tests that ran. Do not promote a
   platform from audit-only based on code inspection alone.
 - Confirm that the release archive contains no plan, gallery, journal, real
-  path, generated image, session, database, cache, or bytecode artifact.
+  path, user-generated image, session, database, cache, or bytecode artifact.
+  The declared synthetic `docs/social-preview.jpg` is the only media exception
+  and must remain below 1 MB.
 - Publish a SHA-256 checksum for the release archive and sign the release when a
   maintainer signing identity is available.
 

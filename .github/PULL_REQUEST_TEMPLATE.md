@@ -1,14 +1,14 @@
 ## What changed
 
-Describe the narrow behavior change and why it belongs in a safety-first cleanup skill.
+Describe the narrow behavior change and why it belongs in a prevention-first
+project-hygiene skill.
 
 ## Safety argument
 
-- What exact artifact becomes eligible?
-- What marker proves it is reproducible or explicitly rejected?
-- Which nearby source/deliverable layout could look similar?
-- How does apply revalidate the target?
-- What is the recovery path?
+- For policy changes: what future clutter is prevented, and which established
+  project conventions or explicit user choices still take precedence?
+- For cleanup changes: what exact artifact becomes eligible, what proves it is
+  reproducible, how is the target revalidated, and what is the recovery path?
 
 ## Tests
 
@@ -17,6 +17,8 @@ List synthetic positive, negative, stale-plan, and platform tests. Do not attach
 ## Checklist
 
 - [ ] Scanning remains non-mutating with respect to cleanup targets.
+- [ ] Bootstrap still writes only its managed root `AGENTS.md` block.
+- [ ] Policy guidance does not silently reorganize or delete existing content.
 - [ ] The change does not broaden roots, follow symlinks, cross mounts, or enter repository/protected Codex boundaries.
 - [ ] Uncertainty remains `review`, `never-delete`, or skipped.
 - [ ] Generated-media similarity does not select files.

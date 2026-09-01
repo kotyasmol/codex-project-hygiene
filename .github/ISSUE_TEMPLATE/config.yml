@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Private security report
-    url: https://github.com/kotyasmol/codex-disk-cleanup/security/advisories/new
+    url: https://github.com/kotyasmol/codex-project-hygiene/security/advisories/new
     about: Report containment, deletion-safety, or approval-bypass vulnerabilities privately.

@@ -1,8 +1,13 @@
 # Contributing
 
-Contributions are welcome, especially adversarial fixtures, platform adapters, recovery improvements, and documentation that makes the risk model easier to understand.
+Contributions are welcome, especially project-hygiene policy improvements,
+adversarial fixtures, platform adapters, recovery improvements, and
+documentation that makes the risk model easier to understand.
 
-This is a filesystem mutator. A new cleanup rule is accepted only when it proves why its target is reproducible and why important nearby content cannot match.
+The primary bootstrap workflow edits one managed block in a project's root
+`AGENTS.md`; optional cleanup mode is a filesystem mutator. A new cleanup rule
+is accepted only when it proves why its target is reproducible and why important
+nearby content cannot match.
 
 ## Development setup
 
@@ -26,6 +31,10 @@ Every behavior change should include:
 - documentation of regeneration cost and platform assumptions;
 - a recovery story, or a clear reason the operation must remain review-only;
 - no new runtime network access or telemetry.
+
+Policy changes should also explain why the instruction is general enough for
+unrelated projects, how it respects established repository conventions, and
+how it avoids creating new process or directory clutter of its own.
 
 For a new `safe` rule, document all of the following:
 
@@ -76,3 +85,4 @@ A platform becomes supported only after scan, tampered-plan, path-containment, T
 - Keep plans, fixtures, and logs free of real user content.
 
 By contributing, you agree that your contribution is licensed under the [MIT License](LICENSE).
+Participation is also governed by the [code of conduct](CODE_OF_CONDUCT.md).

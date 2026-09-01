@@ -43,12 +43,20 @@ class PackageContractTests(unittest.TestCase):
     def test_release_tree_has_no_runtime_artifacts_or_private_data(self) -> None:
         forbidden_suffixes = {".pyc", ".sqlite", ".sqlite3", ".db", ".jsonl", ".png", ".jpg", ".jpeg", ".webp"}
         forbidden_names = {"__pycache__", ".DS_Store"}
+        allowed_public_images = {Path("docs/social-preview.jpg")}
         for path in ROOT.rglob("*"):
             relative = path.relative_to(ROOT)
             self.assertFalse(any(part in forbidden_names for part in relative.parts), str(relative))
             if path.is_file():
-                self.assertNotIn(path.suffix.casefold(), forbidden_suffixes, str(relative))
+                if relative not in allowed_public_images:
+                    self.assertNotIn(path.suffix.casefold(), forbidden_suffixes, str(relative))
                 self.assertIsNone(re.search(r"(^|[-_.])(plan|gallery|journal)([-_.]|$)", path.name, re.I), str(relative))
+
+    def test_social_preview_is_bounded_synthetic_jpeg(self) -> None:
+        preview = ROOT / "docs" / "social-preview.jpg"
+        data = preview.read_bytes()
+        self.assertTrue(data.startswith(b"\xff\xd8\xff"))
+        self.assertLessEqual(len(data), 1_000_000)
 
 
 if __name__ == "__main__":

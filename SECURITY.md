@@ -1,6 +1,10 @@
 # Security policy
 
-Codex Disk Cleanup mutates files, so a false-positive deletion path is a security issue even when no code execution is involved. Please report path-containment bypasses, plan-validation bypasses, symlink or mount escapes, time-of-check/time-of-use flaws, unintended Codex-state deletion, approval-token confusion, and recovery failures as security-sensitive.
+Codex Project Hygiene includes optional cleanup tools that mutate files, so a
+false-positive deletion path is a security issue even when no code execution is
+involved. Please report path-containment bypasses, plan-validation bypasses,
+symlink or mount escapes, time-of-check/time-of-use flaws, unintended Codex-state
+deletion, approval-token confusion, and recovery failures as security-sensitive.
 
 ## Reporting a vulnerability
 

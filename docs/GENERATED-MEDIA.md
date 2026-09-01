@@ -1,6 +1,6 @@
 # Generated-media policy
 
-Generated media is not an ordinary cache. It may be a rejected variation, a chosen asset, evidence in task history, or the only remaining copy of useful work. Codex Disk Cleanup therefore treats every discovered image as protected `unknown` data until the user explicitly rejects its exact ID.
+Generated media is not an ordinary cache. It may be a rejected variation, a chosen asset, evidence in task history, or the only remaining copy of useful work. Codex Project Hygiene therefore treats every discovered image as protected `unknown` data until the user explicitly rejects its exact ID.
 
 ## What the audit found
 

@@ -39,7 +39,7 @@ jobs:
 
       - name: Compile Python sources
         env:
-          PYTHONPYCACHEPREFIX: "${{ runner.temp }}/codex-cleanup-pycache"
+          PYTHONPYCACHEPREFIX: "${{ runner.temp }}/codex-project-hygiene-pycache"
         run: >-
           python -m py_compile
           scripts/cleanup.py
@@ -54,7 +54,7 @@ jobs:
 
       - name: Run synthetic safety tests
         env:
-          PYTHONPYCACHEPREFIX: "${{ runner.temp }}/codex-cleanup-pycache"
+          PYTHONPYCACHEPREFIX: "${{ runner.temp }}/codex-project-hygiene-pycache"
         run: python -m unittest discover -s tests -v
 
       - name: Check whitespace and conflict markers

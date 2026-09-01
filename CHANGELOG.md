@@ -7,7 +7,7 @@ All notable changes are documented here. This project follows semantic versionin
 - Desktop Trash UI certification and broader adversarial coverage remain in progress.
 - A restore command and durable generated-media decision ledger are under consideration.
 
-## [0.4.0-beta] - 2026-08-31
+## [0.4.0-beta] - 2026-09-01
 
 ### Changed
 
@@ -29,6 +29,8 @@ All notable changes are documented here. This project follows semantic versionin
 - Synthetic coverage for non-mutation, existing-instruction preservation,
   stale previews, symlink destinations, malformed markers, idempotence, and
   broad-scope rejection.
+- Public launch documentation, a bounded social preview, support guidance, and
+  community participation standards.
 
 ### Safety changes
 
@@ -37,6 +39,8 @@ All notable changes are documented here. This project follows semantic versionin
   project path other than the exact root `AGENTS.md`.
 - Installation refuses symlinks, special files, invalid UTF-8, oversized files,
   duplicate or incomplete markers, and changed root/destination state.
+
+[0.4.0-beta]: https://github.com/kotyasmol/codex-project-hygiene/releases/tag/v0.4.0-beta
 
 ## [0.3.0-beta] - 2026-08-31
 

@@ -1,7 +1,14 @@
 # Codex Project Hygiene
 
+[![CI](https://github.com/kotyasmol/codex-project-hygiene/actions/workflows/ci.yml/badge.svg)](https://github.com/kotyasmol/codex-project-hygiene/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/kotyasmol/codex-project-hygiene?include_prereleases)](https://github.com/kotyasmol/codex-project-hygiene/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-35c48d.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-19a7ce.svg)](https://www.python.org/downloads/)
+
+![Codex Project Hygiene: stop project clutter before it starts](docs/social-preview.jpg)
+
 **A preventive Codex skill that installs persistent project instructions before
-development starts, so future tasks create fewer directories, keep temporary
+development starts—so later tasks create fewer directories, keep temporary
 iterations outside the repository, and give durable artifacts meaningful names.**
 
 Most cleanup tools arrive after a workspace has already become a landfill. This
@@ -13,6 +20,38 @@ Cleanup helpers for existing projects remain available as an explicit secondary
 mode. They are not activated by project bootstrap.
 
 This is an independent community project and is not an official OpenAI product.
+
+## Before and after
+
+Without persistent project guidance, a sequence of otherwise reasonable tasks
+can leave behind this kind of structure:
+
+```text
+project/
+├── temp-output/
+├── screenshots-new/
+├── generated-images/
+│   ├── image.png
+│   ├── final_v2_new.png
+│   └── final-final.png
+└── experiment-3/
+```
+
+Bootstrap once. Future tasks discover the managed rules in `AGENTS.md` and keep
+scratch outside the repository:
+
+```text
+project/
+├── AGENTS.md
+├── src/
+└── assets/
+    └── onboarding-dashboard-mobile.png
+
+/tmp/<task-scoped-scratch>/   # downloads, renders, rejected candidates
+```
+
+The bootstrap does not reorganize the project or delete anything. It previews
+one exact `AGENTS.md` change and applies it only after approval.
 
 ## What changes after bootstrap
 
@@ -36,20 +75,24 @@ content.
 
 ## Install the skill
 
-The repository itself is the skill directory. Clone or copy it to:
+Recommended: ask Codex to install the skill directly from GitHub:
 
 ```text
-$HOME/.agents/skills/codex-project-hygiene
+Use $skill-installer to install:
+https://github.com/kotyasmol/codex-project-hygiene
 ```
 
-Then restart Codex. You can also ask Codex to use `$skill-installer` with:
+Or install it manually:
 
-```text
-https://github.com/kotyasmol/codex-disk-cleanup
+```bash
+git clone https://github.com/kotyasmol/codex-project-hygiene.git \
+  "$HOME/.agents/skills/codex-project-hygiene"
 ```
 
-The repository currently retains its original cleanup-era URL; the installed
-skill name is `codex-project-hygiene`.
+Restart Codex and begin a new task if the skill is not visible immediately.
+The repository itself is the skill directory; `SKILL.md` must remain at its
+root. OpenAI describes skills as reusable workflows built around a `SKILL.md`
+playbook in its [skills overview](https://help.openai.com/en/articles/20001066).
 
 Review the source and revision before installing any skill that can modify
 project instructions or files.
@@ -92,6 +135,18 @@ backup, policy database, report, or daemon.
 
 Installing the skill alone is not enough: skills are selected per task. The
 bootstrap step is what makes the guidance persistent for that project.
+
+## Why the safety model is reviewable
+
+The prevention workflow is intentionally small:
+
+1. `preview` prints the exact target, diff, and fingerprint without writing.
+2. Approval binds the project root, current `AGENTS.md`, and proposed content.
+3. `apply` revalidates that fingerprint and owns only its marked block.
+4. A second bootstrap updates the same block instead of duplicating it.
+
+There is no daemon, telemetry, global configuration change, background cleanup,
+or runtime network request. The runtime uses only Python's standard library.
 
 ## The installed policy
 
@@ -184,7 +239,8 @@ python3 -m py_compile scripts/*.py tests/*.py
 
 Contributions should use only synthetic fixtures and must preserve the
 default-deny boundaries. See [CONTRIBUTING.md](CONTRIBUTING.md) and
-[SECURITY.md](SECURITY.md).
+[SECURITY.md](SECURITY.md). General help belongs in [SUPPORT.md](SUPPORT.md),
+and community participation follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## License
 
